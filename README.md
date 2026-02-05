@@ -511,28 +511,6 @@ for stock in stocks:
 
 ---
 
-## 🚧 Future Work
-
-### Short-term
-- [ ] Multi-stock portfolio risk aggregation
-- [ ] Real-time data streaming (WebSocket)
-- [ ] Alert system for threshold breaches
-- [ ] Mobile-friendly dashboard
-
-### Medium-term
-- [ ] Non-linear models (Random Forest, XGBoost)
-- [ ] LSTM/GRU for sequential risk patterns
-- [ ] Conditional VaR (CVaR) integration
-- [ ] Backtesting framework
-
-### Long-term
-- [ ] Multi-asset classes (crypto, commodities, forex)
-- [ ] Reinforcement learning for dynamic portfolio rebalancing
-- [ ] Causal inference for risk drivers
-- [ ] Federated learning for distributed training
-
----
-
 ## 📚 References
 
 ### Core Libraries
@@ -552,50 +530,13 @@ for stock in stocks:
 
 ---
 
-## 🤝 Contributing
-
-Contributions are welcome! Please follow these steps:
-
-1. **Fork the repository**
-   ```bash
-   git clone https://github.com/yourusername/ml-ews-risk-management.git
-   ```
-
-2. **Create a feature branch**
-   ```bash
-   git checkout -b feature/your-feature-name
-   ```
-
-3. **Make changes and commit**
-   ```bash
-   git commit -m "Add: Brief description of changes"
-   ```
-
-4. **Push to branch**
-   ```bash
-   git push origin feature/your-feature-name
-   ```
-
-5. **Create Pull Request**
-   - Describe your changes clearly
-   - Link any relevant issues
-   - Ensure tests pass
-
----
-
-## 📄 License
-
-This project is licensed under the **MIT License** - see [LICENSE](LICENSE) file for details.
-
----
-
 ## 👤 Author
 
 **Vanshi Sethi**
 - Roll Number: 23035010020
 - Program: B.Sc. (Honours) Data Science and AI
 - Institution: IIT Guwahati
-- Email: v.sethi@iitg.ac.in
+- Email:s.vanshi@op.iitg.ac.in
 
 ---
 
@@ -603,13 +544,12 @@ This project is licensed under the **MIT License** - see [LICENSE](LICENSE) file
 
 - **Issues**: Open GitHub Issues for bugs and feature requests
 - **Discussions**: Use GitHub Discussions for questions and ideas
-- **Email**: v.sethi@iitg.ac.in
+- **Email**: vanshisethi1815@gmail.com
 
 ---
 
 ## 🙏 Acknowledgments
 
-- **IIT Guwahati** for academic infrastructure and support
 - **Google** for Gemini API and generative AI capabilities
 - **Open-source community** for scikit-learn, pandas, and Streamlit
 - **Financial data providers** (yfinance, Yahoo Finance)
