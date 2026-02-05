@@ -15,7 +15,7 @@ warnings.filterwarnings("ignore")
 st.set_page_config(page_title="Stock Risk Management ML + Gemini News", layout="wide")
 
 st.title("ML BASED EARLY WARNING SYSTEM FOR RISK MANAGEMENT")
-st.markdown("Logistic Regression with **TIME-BASED SPLIT** plus Gemini‑API news sentiment for selected stocks.")
+st.markdown("Logistic Regression with **TIME-BASED SPLIT** plus Gemini-API news sentiment for selected stocks.")
 
 def get_gemini_sentiment(company_name, api_key):
     api_url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key={api_key}"
@@ -44,6 +44,7 @@ def get_gemini_sentiment(company_name, api_key):
         return {"error": f"Network Error during search: {e}"}
     except Exception as e:
         return {"error": f"An unknown error occurred during search: {e}"}
+    
     analyze_query = (
         f"Here is the latest news context for '{company_name}':\n\n{news_context}\n\n"
         f"Based *only* on this provided news context, please provide a financial risk analysis."
@@ -98,6 +99,7 @@ def get_gemini_sentiment(company_name, api_key):
         return {"error": f"Failed to parse JSON response: {e}"}
     except Exception as e:
         return {"error": f"An unknown error occurred during analysis: {e}"}
+
 st.sidebar.header("📁 Data Upload")
 uploaded_file = st.sidebar.file_uploader("Upload CSV file", type=["csv"])
 
@@ -106,10 +108,12 @@ enable_news = st.sidebar.checkbox("Enable news‑based sentiment with Gemini", v
 company_name = st.sidebar.text_input("Company name", value="Apple Inc.")
 symbol = st.sidebar.text_input("Stock symbol (for context only)", value="AAPL")
 gemini_api_key = st.sidebar.text_input("Gemini API Key", type="password", help="Get your key from https://aistudio.google.com/app/apikey")
+
 if uploaded_file is not None:
     try:
         df = pd.read_csv(uploaded_file)
         st.sidebar.success("✅ File uploaded!")
+        
         st.header("1️⃣ Data Cleaning")
         col1, col2 = st.columns(2)
         with col1:
@@ -124,6 +128,7 @@ if uploaded_file is not None:
         with col2:
             st.write(f"**Cleaned:** {df.shape}")
             st.write(f"**Period:** {df['Date'].min().date()} → {df['Date'].max().date()}")
+            
         st.header("2️⃣ Risk Metrics (No Future Leakage)")
 
         df["Daily_Return"] = df["Close"].pct_change()
@@ -151,6 +156,7 @@ if uploaded_file is not None:
             st.metric("Sharpe", f"{df['Sharpe_Ratio'].mean():.2f}")
         with col3:
             st.metric("VaR 95%", f"{df['VaR_95_Annual'].mean():.1%}")
+            
         st.header("3️⃣ Risk Labels")
 
         def classify_risk(row):
@@ -184,6 +190,7 @@ if uploaded_file is not None:
         )
         fig.update_layout(title="Risk Distribution", height=350)
         st.plotly_chart(fig, use_container_width=True)
+        
         st.header("4️⃣ Logistic Regression (Time-Safe)")
 
         feature_cols = [
@@ -200,17 +207,20 @@ if uploaded_file is not None:
         y_train, y_test = y.iloc[:split_idx], y.iloc[split_idx:]
 
         st.write(f"**Train:** {len(X_train)} days ({X_train.index[0]} → {X_train.index[-1]})")
-        st.write(f"**Test:**  {len(X_test)} days ({X_test.index[0]} → {X_test.index[-1]})")
+        st.write(f"**Test:** {len(X_test)} days ({X_test.index[0]} → {X_test.index[-1]})")
+        
         scaler = StandardScaler()
         X_train_scaled = scaler.fit_transform(X_train)
         X_test_scaled = scaler.transform(X_test)
+        
+        # ✅ FIXED: Use correct parameters for multi-class LogisticRegression
         log_reg = LogisticRegression(
-            multi_class="multinomial",
             solver="lbfgs",
-            C=0.01,  # strong L2
+            C=0.01,  # strong L2 regularization
             penalty="l2",
             max_iter=2000,
             random_state=42,
+            n_jobs=-1  # Use all CPU cores
         )
 
         log_reg.fit(X_train_scaled, y_train)
@@ -289,6 +299,7 @@ if uploaded_file is not None:
         st.download_button("📥 Download CSV", csv, "risk_predictions.csv", "text/csv")
 
         st.success(f"✅ Done! Realistic accuracy: {accuracy:.1%}")
+        
         st.header("8️⃣ News-Based Qualitative Risk (Gemini)")
 
         if enable_news:
