@@ -320,31 +320,6 @@ streamlit run ewsml.py
    gemini_api_key = "your-api-key-here"
    ```
 
-### Docker Deployment
-
-```dockerfile
-FROM python:3.10-slim
-
-WORKDIR /app
-
-COPY requirements.txt .
-RUN pip install -r requirements.txt
-
-COPY ewsml.py .
-
-EXPOSE 8501
-
-CMD ["streamlit", "run", "ewsml.py"]
-```
-
-**Build and run:**
-```bash
-docker build -t ml-ews .
-docker run -p 8501:8501 ml-ews
-```
-
----
-
 ## 📁 Project Structure
 
 ```
