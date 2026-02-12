@@ -54,6 +54,7 @@ def get_gemini_sentiment(company_name, api_key):
         "and provide a brief summary and a risk assessment. "
         "You must output your analysis in a structured JSON format."
     )
+
     json_schema = {
         "type": "OBJECT",
         "properties": {
@@ -128,7 +129,7 @@ if uploaded_file is not None:
         with col2:
             st.write(f"**Cleaned:** {df.shape}")
             st.write(f"**Period:** {df['Date'].min().date()} → {df['Date'].max().date()}")
-            
+        
         st.header("2️⃣ Risk Metrics (No Future Leakage)")
 
         df["Daily_Return"] = df["Close"].pct_change()
@@ -156,7 +157,7 @@ if uploaded_file is not None:
             st.metric("Sharpe", f"{df['Sharpe_Ratio'].mean():.2f}")
         with col3:
             st.metric("VaR 95%", f"{df['VaR_95_Annual'].mean():.1%}")
-            
+        
         st.header("3️⃣ Risk Labels")
 
         def classify_risk(row):
@@ -176,14 +177,17 @@ if uploaded_file is not None:
                 score += 1
             return 2 if score >= 4 else 1 if score >= 2 else 0
 
+        # FIXED: Apply the risk classification before plotting
         df["Risk_Level"] = df.apply(classify_risk, axis=1)
-
+        
         risk_dist = df["Risk_Level"].value_counts().sort_index()
+        labels = ["Low", "Medium", "High"]
+        risk_counts = [risk_dist.get(i, 0) for i in range(3)]
         fig = go.Figure(
             data=[
                 go.Bar(
-                    x=["Low", "Medium", "High"],
-                    y=risk_dist.values,
+                    x=labels,
+                    y=risk_counts,
                     marker_color=["green", "orange", "red"],
                 )
             ]
@@ -213,14 +217,13 @@ if uploaded_file is not None:
         X_train_scaled = scaler.fit_transform(X_train)
         X_test_scaled = scaler.transform(X_test)
         
-        # ✅ FIXED: Use correct parameters for multi-class LogisticRegression
         log_reg = LogisticRegression(
             solver="lbfgs",
-            C=0.01,  # strong L2 regularization
+            C=0.01,  
             penalty="l2",
             max_iter=2000,
             random_state=42,
-            n_jobs=-1  # Use all CPU cores
+            n_jobs=-1  
         )
 
         log_reg.fit(X_train_scaled, y_train)
@@ -249,6 +252,7 @@ if uploaded_file is not None:
                 colorscale="Blues",
             )
         )
+
         fig.update_layout(title="Confusion Matrix (Test Set)", height=350)
         st.plotly_chart(fig, use_container_width=True)
 
@@ -295,6 +299,7 @@ if uploaded_file is not None:
                 "Risk_Label",
             ]
         ].copy()
+
         csv = output_df.to_csv(index=False)
         st.download_button("📥 Download CSV", csv, "risk_predictions.csv", "text/csv")
 
