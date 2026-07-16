@@ -1,8 +1,4 @@
-Below is the complete, production-grade `README.md` file in plain markdown format – **no outer code fences**, so you can copy it directly into a single markdown cell (Jupyter) or paste it straight into your `README.md` file. All the content is in one contiguous block, ready to use.
 
----
-
-```markdown
 # 🚨 Machine Learning-Based Early Warning Risk Management System (EWS)
 
 ![Python](https://img.shields.io/badge/Python-3.8%2B-blue?style=for-the-badge&logo=python&logoColor=white)
